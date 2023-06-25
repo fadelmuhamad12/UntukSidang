@@ -1,13 +1,10 @@
-from lzma import PRESET_DEFAULT
-from tkinter.font import names
-from turtle import width
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUiType
 import sys
 import sqlite3
-from datetime import date
+from datetime import date, datetime
 import cv2, os, numpy 
 
 
@@ -32,6 +29,10 @@ class MainApp(QMainWindow, ui):
         self.REPORTSBACK.clicked.connect(self.tampilHalamanUtama)
         self.TRAININGBUTTON.clicked.connect(self.start_training)
         self.RECORD.clicked.connect(self.record_attendance)
+        self.dateEdit.setDate(date.today())
+        self.dateEdit.dateChanged.connect(self.selectedDateReports)
+        self.tabWidget.setStyleSheet("QTabWidget::pane{border:0}")
+
         try: 
             con = sqlite3.connect("face-reco.db")
             con.execute("CREATE TABLE IF NOT EXISTS attendance(attendanceid INTEGER, name Text, attendancedate TEXT)")
@@ -83,9 +84,54 @@ class MainApp(QMainWindow, ui):
     def absenMahasiswa(self):
         self.tabWidget.setCurrentIndex(4)
 
-    #-------Absen Mahasiswa Prosses--------#
+    #-------REPORTS--------#
     def reports(self):
         self.tabWidget.setCurrentIndex(5)
+        self.REPORTS.setRowCount(0)
+        self.REPORTS.clear()
+        con = sqlite3.connect("face-reco.db")
+        cursor = con.execute("SELECT * FROM attendance")
+        result = cursor.fetchall()
+
+        self.REPORTS.setColumnCount(len(result[0]))  # Mengatur jumlah kolom sesuai dengan jumlah data dalam baris pertama
+
+        for row_number, row_data in enumerate(result):
+            self.REPORTS.insertRow(row_number)  # Memasukkan baris baru sebelum memasukkan item ke dalam baris tersebut
+            for column_number, data in enumerate(row_data):
+                self.REPORTS.setItem(row_number, column_number, QTableWidgetItem(str(data)))
+               
+
+        self.REPORTS.setHorizontalHeaderLabels(["Id", "Name", "Date"])
+        self.REPORTS.setColumnWidth(0,10)
+        self.REPORTS.setColumnWidth(1,150)
+        self.REPORTS.setColumnWidth(2,90)
+        self.REPORTS.verticalHeader().setVisible(False)
+
+
+
+     #-------SEleceted Date Reports--------#
+    def selectedDateReports(self):
+        self.REPORTS.setRowCount(0)
+        self.REPORTS.clear()
+        con = sqlite3.connect("face-reco.db")
+        cursor = con.execute("SELECT * FROM attendance WHERE attendancedate = '"+ str((self.dateEdit.date()).toPyDate()) +"'")
+        result = cursor.fetchall()
+
+        self.REPORTS.setColumnCount(len(result[0]))  # Mengatur jumlah kolom sesuai dengan jumlah data dalam baris pertama
+
+        for row_number, row_data in enumerate(result):
+            self.REPORTS.insertRow(row_number)  # Memasukkan baris baru sebelum memasukkan item ke dalam baris tersebut
+            for column_number, data in enumerate(row_data):
+                self.REPORTS.setItem(row_number, column_number, QTableWidgetItem(str(data)))
+               
+
+        self.REPORTS.setHorizontalHeaderLabels(["Id", "Name", "Date"])
+        self.REPORTS.setColumnWidth(0,10)
+        self.REPORTS.setColumnWidth(1,150)
+        self.REPORTS.setColumnWidth(2,90)
+        self.REPORTS.verticalHeader().setVisible(False)
+
+            
 
 
 
@@ -189,18 +235,47 @@ class MainApp(QMainWindow, ui):
                 cv2.rectangle(im,(x,y),(x+w,y+h),(255,255,0),2)
                 face = gray[y:y+h,x:x+w]
                 face_resize = cv2.resize(face,(width,height))
-                confidence =  model.predict(face_resize) #ini untuk level of confidence
+                prediction =  model.predict(face_resize) #ini untuk level of prediction
                 cv2.rectangle(im,(x,y),(x+w, y+h),(0,255,0),3)
-                if(confidence[1]<800):
-                    cv2.putText(im,'%s-%.0f'%(names[confidence[0]],confidence[1]),(x-10,y-10),cv2.FONT_HERSHEY_PLAIN,2,(0,0,255),2)
-                    print(names[confidence[0]])
-                    self.currentprocess.setText("Wajah Terdaftar" + names[confidence[0]])
+                if(prediction[1]<800):
+                    cv2.putText(im,'%s-%.0f'%(names[prediction[0]],prediction[1]),(x-10,y-10),cv2.FONT_HERSHEY_PLAIN,2,(0,0,255),2)
+                    print(names[prediction[0]])
+                    self.currentprocess.setText("Wajah Terdaftar " + names[prediction[0]])
+                    attendanceid=0
+                    available = False
+                    try:
+                        connection = sqlite3.connect('face-reco.db')
+                        cursor = connection.execute("SELECT MAX(attendanceid) from attendance")
+                        result = cursor.fetchall()
+                        if result:
+                            for maxid in result:
+                                attendanceid = int(maxid[0])+1
+                    except:
+                        attendanceid=1
+                    print(attendanceid)
+                   
+
+                    try:
+                        con = sqlite3.connect("face-reco.db")
+                        cursor = con.execute("SELECT * FROM attendance WHERE name='"+ str(names[prediction[0]]) +"' and attendancedate = '"+ str(date.today()) +"'")
+                        result = cursor.fetchall()
+                        if result:
+                            available=True
+                        if(available==False):
+                            con.execute("INSERT INTO attendance VALUES("+ str(attendanceid) +",'"+ str(names[prediction[0]]) +"','"+ str(date.today()) +"')")
+                            con.commit()
+                    except:
+                        print("Error saat memasukan ke database")
+                    print("Berhasil absen ke databse")
+                    self.currentprocess.setText(names[prediction[0]] + " Sudah Ter-absen")
+                    cnt=0
+
                 else:
                     cnt+=1
                     cv2.putText(im,"Tidak Dikenal",(x-10,y-10),cv2.FONT_HERSHEY_PLAIN,2,(0,255,0),2)
                     if(cnt>100):
                         print("Wajah Tidak Dikenal")
-                        self.currentprocess.setText("Wajah Tidak Dikenal" + names[confidence[0]])
+                        self.currentprocess.setText("Wajah Tidak Dikenal" + names[prediction[0]])
                         cv2.imwrite("unKnown.jpg",im)
                         cnt=0
             cv2.imshow("Face Recognition",im)

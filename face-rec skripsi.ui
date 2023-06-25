@@ -26,7 +26,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>5</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
@@ -1122,20 +1122,37 @@ background-color: rgba(255, 255, 255, 0);</string>
       <rect>
        <x>689</x>
        <y>140</y>
-       <width>121</width>
+       <width>91</width>
        <height>22</height>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgb(255, 255, 255);</string>
+      <string notr="true">background-color: rgb(255, 255, 255);
+color: rgb(0,0,0)</string>
+     </property>
+     <property name="currentSection">
+      <enum>QDateTimeEdit::DaySection</enum>
+     </property>
+     <property name="displayFormat">
+      <string>dd/MM/yyyy</string>
+     </property>
+     <property name="calendarPopup">
+      <bool>true</bool>
+     </property>
+     <property name="date">
+      <date>
+       <year>2000</year>
+       <month>1</month>
+       <day>1</day>
+      </date>
      </property>
     </widget>
-    <widget class="QTableWidget" name="tableWidget">
+    <widget class="QTableWidget" name="REPORTS">
      <property name="geometry">
       <rect>
-       <x>540</x>
+       <x>530</x>
        <y>180</y>
-       <width>271</width>
+       <width>291</width>
        <height>251</height>
       </rect>
      </property>
@@ -1176,10 +1193,10 @@ QPushButton#REPORTSBACK:hover {
   <widget class="QFrame" name="frame">
    <property name="geometry">
     <rect>
-     <x>29</x>
-     <y>10</y>
+     <x>30</x>
+     <y>0</y>
      <width>681</width>
-     <height>31</height>
+     <height>51</height>
     </rect>
    </property>
    <property name="frameShape">
