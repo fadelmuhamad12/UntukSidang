@@ -130,8 +130,8 @@ class MainApp(QMainWindow, ui):
         self.tabWidget.setCurrentIndex(6)
         self.REPORTS_2.setRowCount(0)
         self.REPORTS_2.clear()
-        conn = sqlite3.connect("face-reco-mhsw.db") #fetching data dri database ke tabel
-        cursor = conn.execute("SELECT * FROM attendancemhsw")
+        con = sqlite3.connect("face-reco-mhsw.db") #fetching data dri database ke tabel
+        cursor = con.execute("SELECT * FROM attendancemhsw")
         result = cursor.fetchall()
 
         self.REPORTS_2.setColumnCount(len(result[0]))
@@ -175,7 +175,7 @@ class MainApp(QMainWindow, ui):
         self.REPORTS_2.setRowCount(0)
         self.REPORTS_2.clear()
         con = sqlite3.connect("face-reco-mhsw.db")
-        cursor = con.execute("SELECT * FROM attendancemhsw WHERE attendancedate = '"+ str((self.dateEdit.date()).toPyDate()) +"'")
+        cursor = con.execute("SELECT * FROM attendancemhsw WHERE attendancedate = '"+ str((self.dateEdit_2.date()).toPyDate()) +"'")
         result = cursor.fetchall()
 
         self.REPORTS_2.setColumnCount(len(result[0]))  # Mengatur jumlah kolom sesuai dengan jumlah data dalam baris pertama
@@ -264,8 +264,9 @@ class MainApp(QMainWindow, ui):
                 face_resize = cv2.resize(face,(width,height))
                 prediction =  model.predict(face_resize) #ini untuk level of prediction
                 cv2.rectangle(im,(x,y),(x+w, y+h),(0,255,0),3)
-                if(prediction[1]<800):
-                    cv2.putText(im,'%s-%.0f'%(names[prediction[0]],prediction[1]),(x-10,y-10),cv2.FONT_HERSHEY_PLAIN,2,(0,0,255),2)
+                if(prediction[1]<50):
+                    confidence = 100 - (prediction[1] / 1)
+                    cv2.putText(im, '%s - %.2f%%' % (names[prediction[0]], confidence), (x-10, y-10), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0), 2)
                     print(names[prediction[0]])
                     self.currentprocess.setText("Wajah Terdaftar " + names[prediction[0]])
                     attendanceid=0
@@ -299,7 +300,7 @@ class MainApp(QMainWindow, ui):
 
                 else:
                     cnt+=1
-                    cv2.putText(im,"Tidak Dikenal",(x-10,y-10),cv2.FONT_HERSHEY_PLAIN,2,(0,255,0),2)
+                    cv2.putText(im,"Tidak Dikenal",(x-10,y-10),cv2.FONT_HERSHEY_PLAIN,2,(0,0,255),2)
                     if(cnt>100):
                         print("Wajah Tidak Dikenal")
                         self.currentprocess.setText("Wajah Tidak Dikenal" + names[prediction[0]])
