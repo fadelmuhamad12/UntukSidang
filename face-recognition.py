@@ -118,7 +118,7 @@ class MainApp(QMainWindow, ui):
                 self.REPORTS.setItem(row_number, column_number, QTableWidgetItem(str(data)))
                
 
-        self.REPORTS.setHorizontalHeaderLabels(["Id", "Name", "Date"])
+        self.REPORTS.setHorizontalHeaderLabels(["Id", "Name", "Hari/Tanggal", "Waktu"])
         self.REPORTS.setColumnWidth(0,10)
         self.REPORTS.setColumnWidth(1,110)
         self.REPORTS.setColumnWidth(2,70)
@@ -141,7 +141,7 @@ class MainApp(QMainWindow, ui):
             for column_number, data in enumerate(row_data):
                 self.REPORTS_2.setItem(row_number, column_number, QTableWidgetItem(str(data)))
             
-        self.REPORTS_2.setHorizontalHeaderLabels(["Id", "Name", "Date"])
+        self.REPORTS_2.setHorizontalHeaderLabels(["Id", "Name", "Hari/Tanggal", "Waktu"])
         self.REPORTS_2.setColumnWidth(0,10)
         self.REPORTS_2.setColumnWidth(1,110)
         self.REPORTS_2.setColumnWidth(2,70)
@@ -270,6 +270,7 @@ class MainApp(QMainWindow, ui):
                     print(names[prediction[0]])
                     self.currentprocess.setText("Wajah Terdaftar " + names[prediction[0]])
                     attendanceid=0
+                    current_time = datetime.now().strftime("%H:%M:%S")
                     available = False
                     try:
                         connection = sqlite3.connect('face-reco.db')
@@ -290,7 +291,7 @@ class MainApp(QMainWindow, ui):
                         if result:
                             available=True
                         if(available==False):
-                            con.execute("INSERT INTO attendance VALUES("+ str(attendanceid) +",'"+ str(names[prediction[0]]) +"','"+ str(date.today()) +"')")
+                            con.execute("INSERT INTO attendance VALUES("+ str(attendanceid) +",'"+ str(names[prediction[0]]) +"','"+ str(date.today()) + "','" + current_time + "')")
                             con.commit()
                     except:
                         print("Error saat memasukan ke database")
@@ -355,6 +356,7 @@ class MainApp(QMainWindow, ui):
                     print(names[prediction[0]])
                     self.currentprocess_3.setText("Wajah Terdaftar " + names[prediction[0]] + " - %.2f%%" % confidence)
                     attendanceid =0
+                    current_time = datetime.now().strftime("%H:%M:%S")
                     available = False
                     try:
                         connections = sqlite3.connect("face-reco-mhsw.db")
@@ -375,7 +377,7 @@ class MainApp(QMainWindow, ui):
                         if result:
                             available=True
                         if(available==False):
-                            conn.execute("INSERT INTO attendancemhsw VALUES("+ str(attendanceid) +",'"+ str(names[prediction[0]]) +"','"+ str(date.today()) +"')")
+                            conn.execute("INSERT INTO attendancemhsw VALUES("+ str(attendanceid) +",'"+ str(names[prediction[0]]) +"','"+ str(date.today()) + "','" + current_time + "')")
                             conn.commit()
                     except:
                          print("Error saat memasukan ke database")
