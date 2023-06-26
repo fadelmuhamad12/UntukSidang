@@ -1,5 +1,3 @@
-from multiprocessing import connection
-from unittest import result
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -202,7 +200,7 @@ class MainApp(QMainWindow, ui):
         if not os.path.isdir(path):
             os.mkdir(path)
             print("Folder Baru Telah dibuat")
-            (width, height) = (130, 100)
+            (width, height) = (1280, 720)
             cascade_dir = os.path.dirname(cv2.__file__)
             haar_file = os.path.join(cascade_dir, 'data', 'haarcascade_frontalface_default.xml')
             face_cascade = cv2.CascadeClassifier(haar_file)
@@ -251,7 +249,7 @@ class MainApp(QMainWindow, ui):
                 id += 1
         (images,labels) = [numpy.array(lis) for lis in [images,labels]]
         print(images,labels) 
-        (width, height) = (130,100)
+        (width, height) = (1280, 720)
         model = cv2.face.LBPHFaceRecognizer_create() #membuat variabel model dari algoritma LBPH
         model.train(images,labels)
         webcam = cv2.VideoCapture(0)
@@ -334,11 +332,12 @@ class MainApp(QMainWindow, ui):
                     labels.append(int(label))
                 id += 1
         (images,labels) = [numpy.array(lis) for lis in [images,labels]]
-        (width, height) = (130,100)
+        (width, height) = (1280, 720)
         model = cv2.face.LBPHFaceRecognizer_create() #membuat variabel model dari algoritma LBPH
         model.train(images,labels)
         webcam = cv2.VideoCapture(0)
         cnt = 0
+        
         while True:
             (_,im) = webcam.read()
             gray = cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
@@ -349,11 +348,11 @@ class MainApp(QMainWindow, ui):
                 face_resize = cv2.resize(face,(width,height))
                 prediction =  model.predict(face_resize) #ini untuk level of prediction
                 cv2.rectangle(im,(x,y),(x+w, y+h),(0,255,0),3)
-                if(prediction[1]<800):
-                    cv2.putText(im,'%s-%.0f'%(names[prediction[0]],prediction[1]),(x-10,y-10),cv2.FONT_HERSHEY_PLAIN,2,(0,0,255),2)
+                if(prediction[1]<50): #nilai 800 ambang batas yg digunain, semakin kecil ambang batasnya semakin ketat kriteria pengenalan wajahnya
+                    confidence = 100 - (prediction[1] / 1)
+                    cv2.putText(im, '%s - %.2f%%' % (names[prediction[0]], confidence), (x-10, y-10), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0), 2)
                     print(names[prediction[0]])
-                    self.currentprocess.setText("Wajah Terdaftar " + names[prediction[0]])
-
+                    self.currentprocess_3.setText("Wajah Terdaftar " + names[prediction[0]] + " - %.2f%%" % confidence)
                     attendanceid =0
                     available = False
                     try:
@@ -363,9 +362,7 @@ class MainApp(QMainWindow, ui):
                         if result:
                             for maxid in result:
                                 attendanceid = int(maxid[0])+1
-
-                                 
-
+                                
                     except:
                         attendanceid=1
                     print(attendanceid)
@@ -388,10 +385,10 @@ class MainApp(QMainWindow, ui):
 
                 else:
                     cnt+=1
-                    cv2.putText(im,"Wajah Tidak Dikenal",(x-10,y-10),cv2.FONT_HERSHEY_PLAIN,2,(0,255,0),2)
+                    cv2.putText(im,"Wajah Tidak Dikenal",(x-10,y-10),cv2.FONT_HERSHEY_PLAIN,2,(0,0,255),2)
                     if(cnt>100):
                         print("Wajah tidak dikenal")
-                        self.currentprocess_3.setText("Wajah Tidak Dikenal" + names[prediction[0]])
+                        self.currentprocess_3.setText("Wajah Tidak Dikenal")
                         cv2.imwrite("Unknown.jpg",im)
                         cnt=0
             cv2.imshow("Face Recognition",im)
