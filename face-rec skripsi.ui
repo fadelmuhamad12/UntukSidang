@@ -26,7 +26,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>5</number>
+    <number>6</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
@@ -177,11 +177,11 @@ QPushButton#LOGINBUTTON:hover {
      </property>
      <property name="styleSheet">
       <string notr="true">color: rgb(255, 255, 255);
-font: 75 14pt &quot;Times New Roman&quot;;
+font: 75 11pt &quot;Times New Roman&quot;;
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
-      <string>Fadel_12119107</string>
+      <string>Fadel-12119107</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -334,9 +334,9 @@ QPushButton#ATTLINK1:hover {
     <widget class="QPushButton" name="REPORTSLINK1">
      <property name="geometry">
       <rect>
-       <x>110</x>
-       <y>390</y>
-       <width>201</width>
+       <x>50</x>
+       <y>380</y>
+       <width>141</width>
        <height>61</height>
       </rect>
      </property>
@@ -356,7 +356,7 @@ QPushButton#REPORTSLINK1:hover {
 </string>
      </property>
      <property name="text">
-      <string>Reports</string>
+      <string>Daftar Hadir Dosen</string>
      </property>
     </widget>
     <widget class="QPushButton" name="LOGOUTBUTTON">
@@ -413,6 +413,34 @@ QPushButton#ATTLINK2:hover {
      </property>
      <property name="text">
       <string>Absen Mahasiswa</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="REPORTSLINK2">
+     <property name="geometry">
+      <rect>
+       <x>230</x>
+       <y>380</y>
+       <width>141</width>
+       <height>61</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton#REPORTSLINK2 {
+	font: 75 10pt &quot;Times New Roman&quot;;
+	background-color: rgb(10, 50, 76);
+	border-radius:20px;
+	border-bottom: rgba(0,0,0,100);
+	color: rgb(255, 255, 255);
+}
+
+QPushButton#REPORTSLINK2:hover {
+	background-color: rgb(10, 60, 76);
+
+}
+</string>
+     </property>
+     <property name="text">
+      <string>Daftar Hadir Mahasiswa</string>
      </property>
     </widget>
    </widget>
@@ -827,7 +855,7 @@ font: 75 10pt &quot;Times New Roman&quot;;
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
-      <string>*Tolong Tampilkan Wajah Anda Untuk Melakukan Training Wajah</string>
+      <string>*Harap Tampilkan Wajah Anda Untuk Melakukan Training Wajah</string>
      </property>
      <property name="scaledContents">
       <bool>false</bool>
@@ -1021,7 +1049,7 @@ font: 75 10pt &quot;Times New Roman&quot;;
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
-      <string>*Tolong Tampilkan Wajah Anda Untuk Melakukan Training Wajah</string>
+      <string>*Harap Tampilkan Wajah Anda Untuk Melakukan Training Wajah</string>
      </property>
      <property name="scaledContents">
       <bool>false</bool>
@@ -1078,7 +1106,7 @@ font: 75 24pt &quot;Times New Roman&quot;;
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
-      <string>Tabel Absensi</string>
+      <string>Tabel Absensi Dosen</string>
      </property>
      <property name="scaledContents">
       <bool>false</bool>
@@ -1150,9 +1178,9 @@ color: rgb(0,0,0)</string>
     <widget class="QTableWidget" name="REPORTS">
      <property name="geometry">
       <rect>
-       <x>530</x>
+       <x>520</x>
        <y>180</y>
-       <width>291</width>
+       <width>311</width>
        <height>251</height>
       </rect>
      </property>
@@ -1179,6 +1207,161 @@ color: rgb(0,0,0)</string>
 }
 
 QPushButton#REPORTSBACK:hover {
+	background-color: rgb(10, 60, 76);
+
+}
+</string>
+     </property>
+     <property name="text">
+      <string>Kembali</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tab_7">
+    <attribute name="title">
+     <string>Page</string>
+    </attribute>
+    <widget class="QLabel" name="label_19">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>851</width>
+       <height>631</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>MainForm.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_20">
+     <property name="geometry">
+      <rect>
+       <x>560</x>
+       <y>30</y>
+       <width>241</width>
+       <height>81</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color: rgb(255, 255, 255);
+font: 75 24pt &quot;Times New Roman&quot;;
+background-color: rgba(255, 255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string>Tabel Absensi Mahasiswa</string>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_21">
+     <property name="geometry">
+      <rect>
+       <x>540</x>
+       <y>130</y>
+       <width>141</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color: rgb(255, 255, 255);
+font: 75 18pt &quot;Times New Roman&quot;;
+background-color: rgba(255, 255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string>Pilih Tanggal</string>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QDateEdit" name="dateEdit_2">
+     <property name="geometry">
+      <rect>
+       <x>689</x>
+       <y>140</y>
+       <width>91</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(255, 255, 255);
+color: rgb(0,0,0)</string>
+     </property>
+     <property name="currentSection">
+      <enum>QDateTimeEdit::DaySection</enum>
+     </property>
+     <property name="displayFormat">
+      <string>dd/MM/yyyy</string>
+     </property>
+     <property name="calendarPopup">
+      <bool>true</bool>
+     </property>
+     <property name="date">
+      <date>
+       <year>2000</year>
+       <month>1</month>
+       <day>1</day>
+      </date>
+     </property>
+    </widget>
+    <widget class="QTableWidget" name="REPORTS_2">
+     <property name="geometry">
+      <rect>
+       <x>520</x>
+       <y>180</y>
+       <width>311</width>
+       <height>251</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(10, 50, 76);</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="REPORTSBACK_2">
+     <property name="geometry">
+      <rect>
+       <x>560</x>
+       <y>470</y>
+       <width>231</width>
+       <height>71</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton#REPORTSBACK_2 {
+	font: 75 10pt &quot;Times New Roman&quot;;
+	background-color: rgb(10, 50, 76);
+	border-radius:20px;
+	border-bottom: rgba(0,0,0,100);
+	color: rgb(255, 255, 255);
+}
+
+QPushButton#REPORTSBACK_2:hover {
 	background-color: rgb(10, 60, 76);
 
 }

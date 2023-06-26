@@ -1,3 +1,5 @@
+from multiprocessing import connection
+from unittest import result
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -23,16 +25,27 @@ class MainApp(QMainWindow, ui):
         self.ATTLINK1.clicked.connect(self.absenDosen)
         self.ATTLINK2.clicked.connect(self.absenMahasiswa)
         self.REPORTSLINK1.clicked.connect(self.reports)
+        self.REPORTSLINK2.clicked.connect(self.reports2)
         self.TRAININGBACK.clicked.connect(self.tampilHalamanUtama)
         self.ATTENDANCEBACK.clicked.connect(self.tampilHalamanUtama)
         self.ATTENDANCEBACK2.clicked.connect(self.tampilHalamanUtama)
         self.REPORTSBACK.clicked.connect(self.tampilHalamanUtama)
+        self.REPORTSBACK_2.clicked.connect(self.tampilHalamanUtama)
         self.TRAININGBUTTON.clicked.connect(self.start_training)
         self.RECORD.clicked.connect(self.record_attendance)
+        self.RECORD2.clicked.connect(self.record_mahasiswa)
         self.dateEdit.setDate(date.today())
         self.dateEdit.dateChanged.connect(self.selectedDateReports)
+        self.dateEdit_2.setDate(date.today())
+        self.dateEdit_2.dateChanged.connect(self.selectedDateReports2)
         self.tabWidget.setStyleSheet("QTabWidget::pane{border:0}")
 
+
+
+
+
+
+        # DATABASE UTK DOSEN
         try: 
             con = sqlite3.connect("face-reco.db")
             con.execute("CREATE TABLE IF NOT EXISTS attendance(attendanceid INTEGER, name Text, attendancedate TEXT)")
@@ -40,9 +53,16 @@ class MainApp(QMainWindow, ui):
             print("Tabel Berhasil Dibuat")
         except:
             print("Terdapat Error di Database")
-    
 
 
+        # DATABASE UTK Mahasiswa
+        try:
+            conn = sqlite3.connect("face-reco-mhsw.db")
+            conn.execute("CREATE TABLE IF NOT EXISTS attendancemhsw(attendanceid INTEGER, name Text, attendancedate Text)")
+            conn.commit()
+            print("Tabel Berhasil Dibuat")
+        except:
+            print("Terdapat Error di Database")
 
 
 
@@ -71,7 +91,6 @@ class MainApp(QMainWindow, ui):
         self.tabWidget.setCurrentIndex(1)
 
 
-
       #-------Training Prosses--------#
     def trainingWajah(self):
         self.tabWidget.setCurrentIndex(2)
@@ -84,7 +103,7 @@ class MainApp(QMainWindow, ui):
     def absenMahasiswa(self):
         self.tabWidget.setCurrentIndex(4)
 
-    #-------REPORTS--------#
+    #-------Tabel Dosen--------#
     def reports(self):
         self.tabWidget.setCurrentIndex(5)
         self.REPORTS.setRowCount(0)
@@ -103,13 +122,37 @@ class MainApp(QMainWindow, ui):
 
         self.REPORTS.setHorizontalHeaderLabels(["Id", "Name", "Date"])
         self.REPORTS.setColumnWidth(0,10)
-        self.REPORTS.setColumnWidth(1,150)
-        self.REPORTS.setColumnWidth(2,90)
+        self.REPORTS.setColumnWidth(1,110)
+        self.REPORTS.setColumnWidth(2,70)
         self.REPORTS.verticalHeader().setVisible(False)
 
 
+    #-------Tabel Mahasiswa--------#
+    def reports2(self):
+        self.tabWidget.setCurrentIndex(6)
+        self.REPORTS_2.setRowCount(0)
+        self.REPORTS_2.clear()
+        conn = sqlite3.connect("face-reco-mhsw.db") #fetching data dri database ke tabel
+        cursor = conn.execute("SELECT * FROM attendancemhsw")
+        result = cursor.fetchall()
 
-     #-------SEleceted Date Reports--------#
+        self.REPORTS_2.setColumnCount(len(result[0]))
+
+        for row_number, row_data in enumerate(result):
+            self.REPORTS_2.insertRow(row_number)
+            for column_number, data in enumerate(row_data):
+                self.REPORTS_2.setItem(row_number, column_number, QTableWidgetItem(str(data)))
+            
+        self.REPORTS_2.setHorizontalHeaderLabels(["Id", "Name", "Date"])
+        self.REPORTS_2.setColumnWidth(0,10)
+        self.REPORTS_2.setColumnWidth(1,110)
+        self.REPORTS_2.setColumnWidth(2,70)
+        self.REPORTS_2.verticalHeader().setVisible(False)
+
+            
+
+
+     #-------UTK MENAMPILKAN ABSEN DOSEN SESUAI TANGGAL--------#
     def selectedDateReports(self):
         self.REPORTS.setRowCount(0)
         self.REPORTS.clear()
@@ -126,49 +169,32 @@ class MainApp(QMainWindow, ui):
                
 
         self.REPORTS.setHorizontalHeaderLabels(["Id", "Name", "Date"])
-        self.REPORTS.setColumnWidth(0,10)
-        self.REPORTS.setColumnWidth(1,150)
-        self.REPORTS.setColumnWidth(2,90)
         self.REPORTS.verticalHeader().setVisible(False)
 
+
+       #-------UTK MENAMPILKAN ABSEN MAHASISWA SESUAI TANGGAL--------#
+    def selectedDateReports2(self):
+        self.REPORTS_2.setRowCount(0)
+        self.REPORTS_2.clear()
+        con = sqlite3.connect("face-reco-mhsw.db")
+        cursor = con.execute("SELECT * FROM attendancemhsw WHERE attendancedate = '"+ str((self.dateEdit.date()).toPyDate()) +"'")
+        result = cursor.fetchall()
+
+        self.REPORTS_2.setColumnCount(len(result[0]))  # Mengatur jumlah kolom sesuai dengan jumlah data dalam baris pertama
+
+        for row_number, row_data in enumerate(result):
+            self.REPORTS_2.insertRow(row_number)  # Memasukkan baris baru sebelum memasukkan item ke dalam baris tersebut
+            for column_number, data in enumerate(row_data):
+                self.REPORTS_2.setItem(row_number, column_number, QTableWidgetItem(str(data)))
+               
+
+        self.REPORTS_2.setHorizontalHeaderLabels(["Id", "Name", "Date"])
+        self.REPORTS_2.verticalHeader().setVisible(False)
             
 
 
 
     #--------PROSES TRAINING WAJAH---------#
-    # def start_training(self):
-    #     haar_file = 'haarcascade_frontalface_default.xml'
-    #     datasets = 'datasets'
-    #     sub_data = self.traineeName.text() #Ini agar datasetnya tersimpan sesuai dengan nama yang dimasukan pada saat training
-    #     path = os.path.join(datasets,sub_data)
-    #     if not os.path.isdir(path): #jika foldderbya gaada maka dibuat folder
-    #         os.mkdir(path)
-    #         print("Folder Baru Telah dibuat")
-    #         (width,height) = (130,100)
-    #         face_cascade = cv2.CascadeClassifier(haar_file)
-    #         webcam = cv2.VideoCapture(0) #0 itu artinya kamera utama
-    #         count = 1
-    #         while count < int(self.trainingCount.text()) + 1:
-    #             print(count)
-    #             ret ,im = webcam.read()
-    #             gray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY) #ini untuk convert image training menjadi warna greysacle
-    #             faces = face_cascade.detectMultiScale(gray,1.3,4)
-    #             for (x,y,w,h) in faces:
-    #                 cv2.rectangle(im,(x,y),(x+w,y+h),(255,0,0),2)
-    #                 face = gray[y:y+h,x:x+w]
-    #                 face_resize =cv2.resize(face,(width,height))
-    #                 cv2.imwrite("%s/%s.png"%(path,count),face_resize) #untuk menyimpan gambar
-    #             count += 1
-    #             cv2.imshow("OpenCV",im) #untuk menunjukan gambar
-    #             key = cv2.waitkey(10)
-    #             if key == 27:
-    #                 break
-    #         webacam.release()
-    #         cv2.destroyAllWindows()
-    #         path=""
-    #         QMessageBox.information(self, "Training Wajah Berhasil")
-    #         self.traineeName.setText("") #ini untuk inputan di training ketika udh diisini dan ngeklik training wajah maka akan ksoong
-    #         self.trainingCount.setText("100")
     def start_training(self):
         datasets = 'datasets'
         sub_data = self.traineeName.text()
@@ -203,7 +229,10 @@ class MainApp(QMainWindow, ui):
             self.traineeName.setText("")
             self.trainingCount.setText("100")
 
-    # Face Recognition #
+
+
+
+    #------------ ABSEN DOSEN --------------- #
     def record_attendance(self):
         self.currentprocess.setText("Proses Dimulai..Mohon Tunggu..")
         haar_file = 'haarcascade_frontalface_default.xml'
@@ -287,14 +316,90 @@ class MainApp(QMainWindow, ui):
 
 
 
+        #----- ABSEN MAHASISWA ------ #
+    def record_mahasiswa(self):
+        self.currentprocess_3.setText("Proses Dimulai..Mohon Tunggu..")
+        haar_file = 'haarcascade_frontalface_default.xml'
+        face_cascade = cv2.CascadeClassifier(haar_file)
+        datasets = 'datasets'
+        (images,labels,names,id) =([],[],{},0)
+        for(subdir,dirs,files) in os.walk(datasets):
+            for subdir in dirs: #Perulangan untuk mengambil dataset
+                names[id] = subdir
+                subjectpath = os.path.join(datasets, subdir)
+                for filename in os.listdir(subjectpath):
+                    path = subjectpath + "/" + filename
+                    label = id
+                    images.append(cv2.imread(path,0))
+                    labels.append(int(label))
+                id += 1
+        (images,labels) = [numpy.array(lis) for lis in [images,labels]]
+        (width, height) = (130,100)
+        model = cv2.face.LBPHFaceRecognizer_create() #membuat variabel model dari algoritma LBPH
+        model.train(images,labels)
+        webcam = cv2.VideoCapture(0)
+        cnt = 0
+        while True:
+            (_,im) = webcam.read()
+            gray = cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
+            faces = face_cascade.detectMultiScale(gray,1.3,5) #untuk mendeteksi semua muka yg ada di frame
+            for (x,y,w,h) in faces:
+                cv2.rectangle(im,(x,y),(x+w,y+h),(255,255,0),2)
+                face = gray[y:y+h,x:x+w]
+                face_resize = cv2.resize(face,(width,height))
+                prediction =  model.predict(face_resize) #ini untuk level of prediction
+                cv2.rectangle(im,(x,y),(x+w, y+h),(0,255,0),3)
+                if(prediction[1]<800):
+                    cv2.putText(im,'%s-%.0f'%(names[prediction[0]],prediction[1]),(x-10,y-10),cv2.FONT_HERSHEY_PLAIN,2,(0,0,255),2)
+                    print(names[prediction[0]])
+                    self.currentprocess.setText("Wajah Terdaftar " + names[prediction[0]])
+
+                    attendanceid =0
+                    available = False
+                    try:
+                        connections = sqlite3.connect("face-reco-mhsw.db")
+                        cursor = connections.execute("SELECT MAX(attendanceid) from attendancemhsw")
+                        result = cursor.fetchall()
+                        if result:
+                            for maxid in result:
+                                attendanceid = int(maxid[0])+1
+
+                                 
+
+                    except:
+                        attendanceid=1
+                    print(attendanceid)
+
+                    try: #INI JIKA MAHASISWA SUDAH TERDAFTAR DI DATABASE /ABSEN DI HARI INI MAKA GABISA KE ABSEN LG
+                        conn = sqlite3.connect("face-reco-mhsw.db")
+                        cursor = conn.execute("SELECT * FROM attendancemhsw WHERE name='"+ str(names[prediction[0]]) +"' and attendancedate = '"+ str(date.today()) +"'")
+                        result = cursor.fetchall()
+                        if result:
+                            available=True
+                        if(available==False):
+                            conn.execute("INSERT INTO attendancemhsw VALUES("+ str(attendanceid) +",'"+ str(names[prediction[0]]) +"','"+ str(date.today()) +"')")
+                            conn.commit()
+                    except:
+                         print("Error saat memasukan ke database")
+                    print("Berhasil absen ke databse")
+                    self.currentprocess_3.setText(names[prediction[0]] + " Sudah Ter-absen")
+                    cnt=0
 
 
-
-
-
-
-
-
+                else:
+                    cnt+=1
+                    cv2.putText(im,"Wajah Tidak Dikenal",(x-10,y-10),cv2.FONT_HERSHEY_PLAIN,2,(0,255,0),2)
+                    if(cnt>100):
+                        print("Wajah tidak dikenal")
+                        self.currentprocess_3.setText("Wajah Tidak Dikenal" + names[prediction[0]])
+                        cv2.imwrite("Unknown.jpg",im)
+                        cnt=0
+            cv2.imshow("Face Recognition",im)
+            key = cv2.waitKey(10)
+            if key==27:
+                break
+        webcam.release()
+        cv2.destroyAllWindows()
 
 
 
