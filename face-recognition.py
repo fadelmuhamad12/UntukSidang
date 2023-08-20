@@ -24,11 +24,11 @@ class MainApp(QMainWindow, ui):
         self.ATTLINK2.clicked.connect(self.absenMahasiswa)
         self.REPORTSLINK1.clicked.connect(self.reports)
         self.REPORTSLINK2.clicked.connect(self.reports2)
-        self.TRAININGBACK.clicked.connect(self.tampilHalamanUtama)
-        self.ATTENDANCEBACK.clicked.connect(self.tampilHalamanUtama)
-        self.ATTENDANCEBACK2.clicked.connect(self.tampilHalamanUtama)
-        self.REPORTSBACK.clicked.connect(self.tampilHalamanUtama)
-        self.REPORTSBACK_2.clicked.connect(self.tampilHalamanUtama)
+        self.TRAININGBACK.clicked.connect(self.tampilHalamanLogin)
+        self.ATTENDANCEBACK.clicked.connect(self.tampilHalamanLogin)
+        self.ATTENDANCEBACK2.clicked.connect(self.tampilHalamanLogin)
+        self.REPORTSBACK.clicked.connect(self.tampilHalamanAbsenDosen)
+        self.REPORTSBACK_2.clicked.connect(self.tampilHalamanAbsenMahasiswa)
         self.TRAININGBUTTON.clicked.connect(self.start_training)
         self.RECORD.clicked.connect(self.record_attendance)
         self.RECORD2.clicked.connect(self.record_mahasiswa)
@@ -70,7 +70,15 @@ class MainApp(QMainWindow, ui):
         if (kataSandi == "1"):
             self.PASSWORD.setText("")
             self.LOGININFO.setText("")
-            self.tabWidget.setCurrentIndex(1) #jika Passwordnya true maka akan ke halaman utama
+            self.tabWidget.setCurrentIndex(2) #jika Passwordnya true maka akan ke halaman utama
+        elif (kataSandi == "2"):
+            self.PASSWORD.setText("")
+            self.LOGININFO.setText("")
+            self.tabWidget.setCurrentIndex(3)
+        elif(kataSandi == "3"):
+            self.PASSWORD.setText("")
+            self.LOGININFO.setText("")
+            self.tabWidget.setCurrentIndex(4)
         else:
             self.LOGININFO.setText("Password Salah")
             self.PASSWORD.setText("")
@@ -84,9 +92,21 @@ class MainApp(QMainWindow, ui):
         self.close()
 
         #-------Absen Mahasiswa Prosses--------#
-    def tampilHalamanUtama(self):
+    # def tampilHalamanUtama(self):
+    #     self.currentprocess.setText("Belum Melakukan Absensi")
+    #     self.tabWidget.setCurrentIndex(1)
+
+    def tampilHalamanLogin(self):
         self.currentprocess.setText("Belum Melakukan Absensi")
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
+
+    def tampilHalamanAbsenDosen(self):
+        self.currentprocess.setText("Belum Melakukan Absensi")
+        self.tabWidget.setCurrentIndex(3)
+
+    def tampilHalamanAbsenMahasiswa(self):
+        self.currentprocess.setText("Belum melakukan absensi")
+        self.tabWidget.setCurrentIndex(4)
 
 
       #-------Training Prosses--------#
@@ -207,7 +227,7 @@ class MainApp(QMainWindow, ui):
             webcam = cv2.VideoCapture(0)
             count = 1
             while count < int(self.trainingCount.text()) + 1:
-                print(count)
+                # print(count)
                 ret, im = webcam.read()
                 gray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
                 faces = face_cascade.detectMultiScale(gray, 1.3, 4)
@@ -264,11 +284,11 @@ class MainApp(QMainWindow, ui):
                 face_resize = cv2.resize(face,(width,height))
                 prediction =  model.predict(face_resize) #ini untuk level of prediction
                 cv2.rectangle(im,(x,y),(x+w, y+h),(0,255,0),3)
-                if(prediction[1]<50):
+                if(prediction[1] < 15):
                     confidence = 100 - (prediction[1] / 1)
                     cv2.putText(im, '%s - %.2f%%' % (names[prediction[0]], confidence), (x-10, y-10), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0), 2)
-                    print(names[prediction[0]])
-                    self.currentprocess.setText("Wajah Terdaftar " + names[prediction[0]])
+                    # print(names[prediction[0]])
+                    self.currentprocess.setText("Wajah Terdaftar " + names[prediction[0]] + " - %.2f%%" % confidence)
                     attendanceid=0
                     current_time = datetime.now().strftime("%H:%M:%S")
                     available = False
@@ -350,7 +370,7 @@ class MainApp(QMainWindow, ui):
                 face_resize = cv2.resize(face,(width,height))
                 prediction =  model.predict(face_resize) #ini untuk level of prediction
                 cv2.rectangle(im,(x,y),(x+w, y+h),(0,255,0),3)
-                if(prediction[1]<50): #nilai 800 ambang batas yg digunain, semakin kecil ambang batasnya semakin ketat kriteria pengenalan wajahnya
+                if(prediction[1]<15): #nilai 800 ambang batas yg digunain, semakin kecil ambang batasnya semakin ketat kriteria pengenalan wajahnya
                     confidence = 100 - (prediction[1] / 1)
                     cv2.putText(im, '%s - %.2f%%' % (names[prediction[0]], confidence), (x-10, y-10), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0), 2)
                     print(names[prediction[0]])

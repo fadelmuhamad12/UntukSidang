@@ -26,7 +26,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>5</number>
+    <number>3</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
@@ -331,7 +331,7 @@ QPushButton#ATTLINK1:hover {
       <string>Absen Dosen</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="REPORTSLINK1">
+    <widget class="QPushButton" name="REPORTSLINK1_2">
      <property name="geometry">
       <rect>
        <x>50</x>
@@ -415,7 +415,7 @@ QPushButton#ATTLINK2:hover {
       <string>Absen Mahasiswa</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="REPORTSLINK2">
+    <widget class="QPushButton" name="REPORTSLINK2_3">
      <property name="geometry">
       <rect>
        <x>230</x>
@@ -642,7 +642,7 @@ QPushButton#TRAININGBUTTON:hover {
 </string>
      </property>
      <property name="text">
-      <string>Trainig Wajah</string>
+      <string>Training</string>
      </property>
     </widget>
     <widget class="QPushButton" name="TRAININGBACK">
@@ -815,10 +815,10 @@ background-color: rgba(255, 255, 255, 0);</string>
     <widget class="QPushButton" name="ATTENDANCEBACK">
      <property name="geometry">
       <rect>
-       <x>100</x>
-       <y>410</y>
-       <width>231</width>
-       <height>71</height>
+       <x>50</x>
+       <y>400</y>
+       <width>161</width>
+       <height>61</height>
       </rect>
      </property>
      <property name="styleSheet">
@@ -837,7 +837,7 @@ QPushButton#ATTENDANCEBACK:hover {
 </string>
      </property>
      <property name="text">
-      <string>Kembali</string>
+      <string>Keluar</string>
      </property>
     </widget>
     <widget class="QLabel" name="currentprocess_2">
@@ -865,6 +865,34 @@ background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="REPORTSLINK1">
+     <property name="geometry">
+      <rect>
+       <x>240</x>
+       <y>400</y>
+       <width>151</width>
+       <height>61</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton#REPORTSLINK1 {
+	font: 75 10pt &quot;Times New Roman&quot;;
+	background-color: rgb(10, 50, 76);
+	border-radius:20px;
+	border-bottom: rgba(0,0,0,100);
+	color: rgb(255, 255, 255);
+}
+
+QPushButton#REPORTSLINK1:hover {
+	background-color: rgb(10, 60, 76);
+
+}
+</string>
+     </property>
+     <property name="text">
+      <string>Daftar Hadir Dosen</string>
      </property>
     </widget>
    </widget>
@@ -1009,10 +1037,10 @@ background-color: rgba(255, 255, 255, 0);</string>
     <widget class="QPushButton" name="ATTENDANCEBACK2">
      <property name="geometry">
       <rect>
-       <x>100</x>
-       <y>410</y>
-       <width>231</width>
-       <height>71</height>
+       <x>50</x>
+       <y>400</y>
+       <width>161</width>
+       <height>61</height>
       </rect>
      </property>
      <property name="styleSheet">
@@ -1031,7 +1059,7 @@ QPushButton#ATTENDANCEBACK2:hover {
 </string>
      </property>
      <property name="text">
-      <string>Kembali</string>
+      <string>Keluar</string>
      </property>
     </widget>
     <widget class="QLabel" name="currentprocess_4">
@@ -1059,6 +1087,34 @@ background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="REPORTSLINK2">
+     <property name="geometry">
+      <rect>
+       <x>240</x>
+       <y>400</y>
+       <width>151</width>
+       <height>61</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton#REPORTSLINK2 {
+	font: 75 10pt &quot;Times New Roman&quot;;
+	background-color: rgb(10, 50, 76);
+	border-radius:20px;
+	border-bottom: rgba(0,0,0,100);
+	color: rgb(255, 255, 255);
+}
+
+QPushButton#REPORTSLINK2:hover {
+	background-color: rgb(10, 60, 76);
+
+}
+</string>
+     </property>
+     <property name="text">
+      <string>Daftar Hadir Mahasiswa</string>
      </property>
     </widget>
    </widget>
